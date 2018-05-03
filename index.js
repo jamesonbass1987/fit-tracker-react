@@ -1,27 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cookieSession = require('cookie-session');
-const passport = require('passport');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
-
-
-mongoose.connect(keys.mongoURI);
+const passport = require('passport');
 
 const app = express();
+mongoose.connect(keys.mongoURI);
 
 app.use(bodyParser.json());
-
-app.use(
-    cookieSession({
-        // maxAge set for 30 days
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        keys: [keys.cookieKey]
-    })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.get('/', (req,res) => {
     res.send({hello: 'there'})
