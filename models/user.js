@@ -1,4 +1,4 @@
-const mongoose = requier('mongoose');
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -16,7 +16,7 @@ userSchema.methods.setPassword = function(password){
     this.passwordHash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
 }
 
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.verifyPassword = function(password) {
     const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
     return this.passwordHash === hash;
 }
@@ -33,4 +33,7 @@ userSchema.methods.generateJwt = function() {
         }, keys.userSecret
     );
 }
-module.exports = mongoose.model("User", UserSchema);
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
