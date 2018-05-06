@@ -1,20 +1,6 @@
 import * as actionTypes from "./actionTypes";
 import axios from "axios";
 
-export const fetchCurrentUser = () => async dispatch => {
-    let token;
-
-    if (isLoggedIn()){
-        token = await getUserToken();
-    }
-
-
-    dispatch({
-        type: actionTypes.FETCH_CURRENT_USER,
-        payload: token
-    });
-};
-
 export const handleLogin = payload => dispatch => {
 
     const { username, password } = payload;
@@ -34,8 +20,7 @@ export const handleLogin = payload => dispatch => {
         });
 }
 
-export const getUserToken = () => {
-    const token = localStorage.getItem('token');
+export const parseToken = token => {
     let payload;
 
     if (token) {
@@ -47,12 +32,38 @@ export const getUserToken = () => {
     }
 }
 
+export const fetchUser = () => dispatch => {
+    const token = localStorage.getItem('token');
+    let user;
+
+    if (token) {
+        user = parseToken(token);
+    }
+    
+    dispatch({
+        type: actionTypes.FETCH_CURRENT_USER,
+        payload: { token, user }
+    });
+};
+
+
+
 export const isLoggedIn = () => {
-    const user = getUserToken();
+    const token = localStorage.getItem('token');
+    const user = parseToken(token);
 
     if (user) {
         return user.exp > Date.now() / 1000;
     } else {
         return false;
     }
+}
+
+export const handleLogout = () => dispatch => {
+
+    localStorage.removeItem('token');
+
+    dispatch({
+        type: actionTypes.REMOVE_CURRENT_USER
+    })
 }

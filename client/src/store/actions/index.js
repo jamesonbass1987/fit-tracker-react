@@ -1,4 +1,5 @@
 export { 
-    fetchCurrentUser,
-    handleLogin
+    fetchUser,
+    handleLogin,
+    handleLogout
 } from './auth';
