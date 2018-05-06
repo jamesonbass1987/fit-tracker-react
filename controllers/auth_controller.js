@@ -15,6 +15,7 @@ module.exports.register = (req, res) => {
 };
 
 module.exports.login = (req, res) => {
+
     passport.authenticate('local', (err, user, info) => {
 
         if (err) {
@@ -23,7 +24,12 @@ module.exports.login = (req, res) => {
 
         if (user) {
             const token = user.generateJwt();
-            res.status(200).send({ token });
+            const userInfo = {
+                username: user.username,
+                _id: user._id,
+            }
+
+            res.status(200).send({ token, user: userInfo });
 
         } else {
             res.status(401).send(info);
@@ -32,3 +38,4 @@ module.exports.login = (req, res) => {
     })(req, res)
 
 };
+

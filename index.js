@@ -17,7 +17,7 @@ mongoose.connection.once('open', () => {
 // [SH] Bring in the Passport config after model is defined
 require('./services/passport');
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(cors());
 
